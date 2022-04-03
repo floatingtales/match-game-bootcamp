@@ -9,7 +9,7 @@
  */
 
 // boardSize has to be an even number
-const boardSize = 4;
+const boardSize = 12;
 const board = [];
 let deck = [];
 
@@ -92,6 +92,15 @@ const deckShuffler = (deckToShuffle) => {
  * Creates the grid of array for the game
  */
 const gridCreator = () => {
+  if (boardSize % 2 === 1) {
+    alert('can\'t make game because boardSize is an odd number');
+    return;
+  }
+  if (boardSize > 10) {
+    alert('board size too big for only one deck of cards');
+    return;
+  }
+
   const cardToPlace = boardSize * boardSize;
   const cardToDraw = cardToPlace / 2;
   let cardsOnGrid = [];
