@@ -8,8 +8,12 @@
  * ==============================
  */
 
+// DOM stuff
+const boardDiv = document.createElement('div');
+const infoDiv = document.createElement('div');
+
 // boardSize has to be an even number
-const boardSize = 12;
+const boardSize = 4;
 const board = [];
 let deck = [];
 
@@ -89,6 +93,49 @@ const deckShuffler = (deckToShuffle) => {
 };
 
 /**
+ * ==============================
+ * ==============================
+ * Handler/Callback Functions
+ * ==============================
+ * ==============================
+ */
+
+/**
+ * handler function on card click
+ * @param {number} row the row of card that are clicked
+ * @param {number} column the column of card that are clicked
+ */
+const cardClickHandler = (row, column) => {
+  const rowElementArray = document.getElementsByClassName('cardRow');
+  const cardElementArray = rowElementArray[row].getElementsByClassName('card');
+  const clickedCard = cardElementArray[column];
+  clickedCard.innerHTML = '';
+
+  const cardNameDiv = document.createElement('div');
+  cardNameDiv.classList.add('name', board[row][column].colour);
+  cardNameDiv.innerText = board[row][column].displayName;
+
+  const cardSymbolDiv = document.createElement('div');
+  cardSymbolDiv.classList.add('symbol', board[row][column].colour);
+  cardSymbolDiv.innerText = board[row][column].symbol;
+
+  clickedCard.append(cardNameDiv);
+  clickedCard.append(cardSymbolDiv);
+
+  setTimeout(() => {
+    clickedCard.innerHTML = '';
+  }, 5000);
+};
+
+/**
+ * ==============================
+ * ==============================
+ * Game Functions
+ * ==============================
+ * ==============================
+ */
+
+/**
  * Creates the grid of array for the game
  */
 const gridCreator = () => {
@@ -123,26 +170,46 @@ const gridCreator = () => {
   }
 };
 
-// debugging codes
-if (deck.length === 0) {
-  deck = deckShuffler(deckCreator());
-  console.log(deck);
-}
-gridCreator();
-console.log(board);
-
 /**
- * ==============================
- * ==============================
- * Handler/Callback Functions
- * ==============================
- * ==============================
+ * Creates UI for a grid in the game
  */
+const gridUICreator = () => {
+  for (let i = 0; i < board.length; i += 1) {
+    const cardRowDiv = document.createElement('div');
+    cardRowDiv.className = 'cardRow';
+    for (let j = 0; j < board[i].length; j += 1) {
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'card';
 
-/**
- * ==============================
- * ==============================
- * Game Functions
- * ==============================
- * ==============================
- */
+      cardDiv.addEventListener('click', () => { cardClickHandler(i, j); });
+
+      // this is what you add if you want to display the cards
+      // const cardNameDiv = document.createElement('div');
+      // cardNameDiv.classList.add('name', board[i][j].colour);
+      // cardNameDiv.innerText = board[i][j].displayName;
+
+      // const cardSymbolDiv = document.createElement('div');
+      // cardSymbolDiv.classList.add('symbol', board[i][j].colour);
+      // cardSymbolDiv.innerText = board[i][j].symbol;
+
+      // cardDiv.append(cardNameDiv);
+      // cardDiv.append(cardSymbolDiv);
+      cardRowDiv.append(cardDiv);
+    }
+    boardDiv.append(cardRowDiv);
+  }
+  document.body.append(boardDiv);
+};
+
+const gameInit = () => {
+  if (deck.length === 0) {
+    deck = deckShuffler(deckCreator());
+    console.log(deck);
+  }
+  gridCreator();
+  gridUICreator();
+  infoDiv.innerText = "let's play match game!";
+  document.body.append(infoDiv);
+  console.log(board);
+};
+gameInit();
